@@ -21,8 +21,10 @@ the switch never starts anything.
 - **Listen:** one memo on the deck. ▶ plays it from where it stands (with a line under it while it plays, as a deck's
   play key stays down), ■ stops it there. ◀◀ ▶▶ skip 5 s while playing (held: 15 s steps, then a minute); while stopped,
   ◀◀ goes to the start, then the memo before, ▶▶ to the memo after. Touch or slide along the bar to move through the
-  memo. The title at the top opens the memo's page: rename (on Light's keyboard) or erase.
-- **Memos** lists them all, newest first; a tap plays one. SELECT erases several at once, after asking.
+  memo. The title at the top opens the memo's page: tap its name to rename it on Light's keyboard, or the trash icon
+  to erase it, after asking.
+- **Memos** lists them all, newest first; a tap plays one. SELECT, then the trash icon, erases several at once,
+  after asking.
 - **Play speed**, in the menu, from 0.5× to 2×, and **at other speeds**: *keep pitch* (a memo sounds like itself) or
   *like tape* (slower is lower, faster is higher: 0.5× is an octave down, 2× an octave up). Android makes a pitch by
   playing the sound at another rate, so a pitch equal to the speed is exactly tape's sound; on the simulator the mixer
@@ -43,7 +45,8 @@ the switch never starts anything.
   computer (the `tool-manager-provider` capability): copy memos off the phone, or put sound files on it and they join
   the list. The folder can be included in Light's backups.
 - Screens are Light's kit: `LightTopBar`, Light's icons for the transport, chosen rows underlined as Light's own
-  settings do, Light's keyboard for names, and Light's permission screen for the mic.
+  settings do, Light's keyboard for names, and Light's permission screen for the mic. A memo's page follows Joe at
+  Light's sketch: the name is a field you tap to rename, and Light's trash icon leads to the erase confirmation.
 
 ## How it records
 

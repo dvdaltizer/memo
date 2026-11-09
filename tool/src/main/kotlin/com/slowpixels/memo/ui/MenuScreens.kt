@@ -53,11 +53,11 @@ class HelpScreen(sealed: SealedLightActivity) : ListScreen(sealed) {
             Item("Play and stop", detail = "Stop leaves the memo where it is; play goes on from there")
             Item("Back and forward", detail = "While playing, five seconds a tap; hold to go further. While stopped, to the start, or the memo before or after")
             Item("The bar", detail = "Touch or slide along it to move through the memo")
-            Item("The title", detail = "Tap it to rename or erase the memo")
+            Item("The title", detail = "Opens the memo's page: tap its name to rename it, or the trash to erase it")
             Item("Locked", detail = "A memo goes on playing with the phone locked")
             Heading("Memos")
             Item("On a computer", detail = "Light's Tool Manager shows Memo's folder of memos, to copy them off the phone or add sound files")
-            Item("Erase several", detail = "Memos, then SELECT")
+            Item("Erase several", detail = "Memos, then SELECT, then the trash")
         }
     }
 }

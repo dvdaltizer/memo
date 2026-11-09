@@ -1,11 +1,14 @@
 package com.slowpixels.memo.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +18,9 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +39,7 @@ import com.thelightphone.sdk.ui.LightThemeController
 import com.thelightphone.sdk.ui.LightThemeTokens
 import com.thelightphone.sdk.ui.LightTopBar
 import com.thelightphone.sdk.ui.LightTopBarCenter
+import com.thelightphone.sdk.ui.designVerticalPxToDp
 import com.thelightphone.sdk.ui.gridUnitsAsDp
 import com.thelightphone.sdk.ui.lightClickable
 
@@ -147,3 +153,23 @@ fun Note(text: String, modifier: Modifier = Modifier) =
 @Composable
 fun Heading(text: String) = LightText(text, LightTextVariant.Subheading,
     Modifier.fillMaxWidth().padding(top = 1f.gridUnitsAsDp(), bottom = 0.25f.gridUnitsAsDp()).semantics { heading() })
+
+/**
+ * A value to tap and change, drawn as Light draws a field: the value over an underline, a small label under it
+ * ([placeholder] stands in while there's no value). Typing happens on a screen of its own, so [onClick] opens it.
+ */
+@Composable
+fun TitleField(value: String, placeholder: String, label: String, onClick: () -> Unit) {
+    val colors = LightThemeTokens.colors
+    Column(
+        Modifier.fillMaxWidth()
+            .padding(start = 1f.gridUnitsAsDp(), top = 0.5f.gridUnitsAsDp(), bottom = 1.5f.gridUnitsAsDp())
+            .lightClickable(onClick = onClick)
+            .semantics(mergeDescendants = true) { role = Role.Button },
+    ) {
+        LightText(value.ifBlank { placeholder }, LightTextVariant.Heading, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Spacer(Modifier.height(0.5f.gridUnitsAsDp()))
+        Box(Modifier.fillMaxWidth().height(3f.designVerticalPxToDp()).background(colors.content))
+        LightText(label, LightTextVariant.Detail, Modifier.padding(top = 0.4f.gridUnitsAsDp()))
+    }
+}

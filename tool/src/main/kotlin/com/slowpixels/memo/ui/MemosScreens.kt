@@ -15,6 +15,7 @@ import com.thelightphone.sdk.SealedLightActivity
 import com.thelightphone.sdk.SimpleLightScreen
 import com.thelightphone.sdk.rememberKeyboardOptions
 import com.thelightphone.sdk.ui.LightBarButton
+import com.thelightphone.sdk.ui.LightIcons
 import com.thelightphone.sdk.ui.LightTextInputEditor
 import com.thelightphone.sdk.ui.LightThemeTokens
 
@@ -54,11 +55,12 @@ class PickScreen(sealed: SealedLightActivity) : ListScreen(sealed) {
         val count = chosen.size
         ListPage(
             if (count == 0) "Select memos" else "$count selected", back = { goBack() },
+            // Light's trash icon leads to the confirmation, as on a memo's page and in LightOS.
             bottom = listOf(
-                LightBarButton.Text("CANCEL", onClick = { goBack() }),
-                LightBarButton.Text("ERASE", enabled = count > 0, onClick = {
+                LightBarButton.LightIcon(LightIcons.TRASH, enabled = count > 0, contentDescription = "Erase the selected memos", onClick = {
                     if (count > 0) navigateTo({ EraseScreen(it, chosen) })
                 }),
+                null,
             ),
         ) {
             for (m in list.asReversed()) {
@@ -90,7 +92,10 @@ class EraseScreen(sealed: SealedLightActivity, private val numbers: Set<Int>) : 
     }
 }
 
-/** The memo on the deck: when it was made, how long it is, and what can be done with it. */
+/**
+ * The memo on the deck, laid out as Joe at Light sketched it (2026-11-09): its name as a field to tap and rename, when
+ * it was made and how long it is, and Light's trash icon along the foot, which asks before erasing.
+ */
 class MemoScreen(sealed: SealedLightActivity) : ListScreen(sealed) {
     @Composable
     override fun Body() {
@@ -98,16 +103,22 @@ class MemoScreen(sealed: SealedLightActivity) : ListScreen(sealed) {
         val state by Hub.deck.state.collectAsState()
         val m = list.firstOrNull { it.number == state.memo }
         if (m == null) { ListPage("Memo", back = { goBack() }) { Note("This memo is gone.") }; return }
-        ListPage(m.title, back = { goBack() }) {
+        ListPage(
+            m.title, back = { goBack() },
+            bottom = listOf(
+                LightBarButton.LightIcon(LightIcons.TRASH, contentDescription = "Erase this memo", onClick = {
+                    navigateTo({ EraseScreen(it, setOf(m.number)) })
+                }),
+                null,
+            ),
+        ) {
+            TitleField(m.name, placeholder = m.title, label = "Memo Title") {
+                navigateTo({ NameScreen(it, "Memo Title", m.name) { name -> Hub.memos.rename(m.number, name) } })
+            }
             Item("Made", value = Say.date(m.made))
             Item("Length", value = Say.length(m.length))
             Item("Number", value = "${m.number}")
             Item("File", detail = m.file)
-            Heading("This memo")
-            Item("Rename") {
-                navigateTo({ NameScreen(it, "Rename", m.name, placeholder = "Memo ${m.number}") { name -> Hub.memos.rename(m.number, name) } })
-            }
-            Item("Erase", detail = "Gone for good") { navigateTo({ EraseScreen(it, setOf(m.number)) }) }
         }
     }
 }
@@ -117,7 +128,6 @@ class NameScreen(
     sealed: SealedLightActivity,
     private val title: String,
     private val initial: String,
-    private val placeholder: String = "",
     private val onDone: (String) -> Unit,
 ) : SimpleLightScreen<Unit>(sealed) {
     @Composable
@@ -126,7 +136,7 @@ class NameScreen(
         val text = rememberTextFieldState(initial)
         Themed {
             LightTextInputEditor(
-                title = if (text.text.isEmpty() && placeholder.isNotEmpty()) "$title: $placeholder" else title,
+                title = title,
                 state = text, keyboardOptionsFlow = options, submitLabel = "SAVE", singleLine = true, initialCaps = true,
                 onSubmit = { onDone(it.toString().trim().take(Memos.MAX_NAME)); goBack() },
                 onBack = { goBack() },
