@@ -1,0 +1,13 @@
+[tool]
+id = "com.slowpixels.memo"
+label = "Memo"
+versionCode = 1
+versionName = "1.0.0"
+permissions = ["android.permission.RECORD_AUDIO"]
+# detached-audio: memos go on playing with the phone locked. tool-manager-provider: memos can be copied to and from a
+# computer with Light's Tool Manager, and backed up.
+capabilities = ["detached-audio", "tool-manager-provider"]
+# for the LightOS emulator, use the line below and build with -DlightSdk.allowAltServerPackage=true
+# serverPackage = "com.thelightphone.sdk.emulator"
+serverPackage = "com.lightos"
+orientation = "portrait"
